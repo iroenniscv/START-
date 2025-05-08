@@ -1,0 +1,6 @@
+python-telegram-bot==20.0
+requests==2.31.0
+python-dotenv==1.0.0
+sqlalchemy==2.0.0
+certstream==1.12  # Para Certificate Transparency
+psutil==5.9.0     # Para métricas del sistema
