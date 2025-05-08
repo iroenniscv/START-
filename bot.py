@@ -1,53 +1,27 @@
-import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import (
-    Application, CommandHandler, CallbackQueryHandler, ContextTypes
-)
-from dotenv import load_dotenv
-from website_monitor import (
-    add_website, edit_website, check_status, scan_ports, ping_host, is_up
-)
-from utils import cancel_command
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-load_dotenv()
+# Comando /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("¡Hola! Soy un bot sencillo desplegado en Koyeb 🎉.")
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    welcome_msg = (
-        "¡Hola! Soy @watch_bot. Puedo vigilar tus sitios web y avisarte si fallan.\n\n"
-        "📌 **Comandos disponibles:**\n"
-        "/add - Agregar un sitio web\n"
-        "/edit - Editar configuración\n"
-        "/status - Estado de tus sitios\n"
-        "/subscribe - Suscripción premium\n"
-        "/metrics - Métricas de respuesta\n"
-        "/ping - Hacer ping a un host\n"
-        "/ports - Escanear puertos\n"
-        "/isup - Verificar si un sitio está caído\n"
-        "/cancel - Cancelar comando actual\n"
-        "/help - Ayuda"
-    )
-    await update.message.reply_text(welcome_msg)
-
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Aquí tienes ayuda. 😊")
+# Comando /help
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Estos son los comandos disponibles:\n/start - Saludo inicial\n/help - Ayuda")
 
 def main():
-    app = Application.builder().token(TOKEN).build()
+    # Token del Bot (obtenlo desde @BotFather en Telegram)
+    BOT_TOKEN = "7725269349:AAFHd6AYWbFkUJ5OjSe2CjenMMjosD_JvD8"
 
-    # Handlers
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("add", add_website))
-    app.add_handler(CommandHandler("edit", edit_website))
-    app.add_handler(CommandHandler("status", check_status))
-    app.add_handler(CommandHandler("ping", ping_host))
-    app.add_handler(CommandHandler("ports", scan_ports))
-    app.add_handler(CommandHandler("isup", is_up))
-    app.add_handler(CommandHandler("cancel", cancel_command))
+    # Inicializar la aplicación del bot
+    application = Application.builder().token(BOT_TOKEN).build()
 
-    app.run_polling()
+    # Añadir manejadores de comandos
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+
+    # Ejecutar el bot
+    application.run_polling()
 
 if __name__ == "__main__":
     main()
